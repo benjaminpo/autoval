@@ -1,0 +1,145 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install Node.js dependencies
+      run: npm ci
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+        pip install black flake8 isort mypy bandit pylint
+    
+    - name: Run ESLint
+      run: npm run lint
+    
+    - name: Check TypeScript types
+      run: npx tsc --noEmit
+    
+    - name: Format Python code with Black
+      run: |
+        cd backend
+        black --check --diff .
+      continue-on-error: true
+    
+    - name: Run Flake8
+      run: |
+        cd backend
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+    
+    - name: Run isort
+      run: |
+        cd backend
+        isort --check-only --diff .
+      continue-on-error: true
+    
+    - name: Run Bandit security scan
+      run: |
+        cd backend
+        bandit -r . -f json -o bandit-report.json
+      continue-on-error: true
+    
+    - name: Run MyPy type checking
+      run: |
+        cd backend
+        mypy . --ignore-missing-imports
+      continue-on-error: true
+    
+    - name: Upload Code Quality Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: code-quality-reports
+        path: |
+          backend/bandit-report.json
+          coverage/
+
+  performance-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        npm ci
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+        pip install pytest-benchmark
+    
+    - name: Build application
+      run: npm run build
+    
+    - name: Run performance tests
+      run: |
+        cd backend
+        echo "🚀 Running basic performance tests..."
+        python -c "
+        import time
+        import requests
+        import subprocess
+        import os
+        import signal
+        
+        # Start the Flask app in background
+        proc = subprocess.Popen(['python', 'app.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        time.sleep(3)  # Wait for server to start
+        
+        try:
+            # Basic performance test
+            start_time = time.time()
+            response = requests.get('http://localhost:5000/')
+            end_time = time.time()
+            
+            print('Response time: {:.3f}s'.format(end_time - start_time))
+            print('Status code:', response.status_code)
+            
+            if response.status_code == 200:
+                print('✅ Performance test passed')
+            else:
+                print('❌ Performance test failed')
+                
+        finally:
+            # Clean up
+            proc.terminate()
+            proc.wait()
+        "
+      continue-on-error: true

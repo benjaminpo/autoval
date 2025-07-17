@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      target: frontend-builder
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      target: backend-builder
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    volumes:
+      - ./backend:/app/backend
+    working_dir: /app
+    command: python backend/app.py
+
+  test:
+    build:
+      context: .
+      target: production
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: python run_tests.py
+    depends_on:
+      - backend
+
+volumes:
+  node_modules:

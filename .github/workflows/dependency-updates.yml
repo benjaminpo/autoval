@@ -1,0 +1,100 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-npm-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Update npm dependencies
+      run: |
+        npm update
+        npm audit fix --force
+    
+    - name: Run tests after update
+      run: |
+        npm run test:coverage
+        npm run lint
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update npm dependencies'
+        title: 'chore: automated npm dependency updates'
+        body: |
+          This PR contains automated updates to npm dependencies.
+          
+          ## Changes
+          - Updated npm packages to latest versions
+          - Fixed security vulnerabilities with npm audit fix
+          - All tests are passing
+          
+          Please review the changes and merge if everything looks good.
+        branch: automated-npm-updates
+        delete-branch: true
+
+  update-python-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install pip-tools
+      run: pip install pip-tools
+    
+    - name: Update Python dependencies
+      run: |
+        cd backend
+        pip-compile --upgrade requirements.in || echo "No requirements.in found, skipping pip-compile"
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-mock
+    
+    - name: Run backend tests
+      run: |
+        cd backend
+        python -m pytest -v
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update Python dependencies'
+        title: 'chore: automated Python dependency updates'
+        body: |
+          This PR contains automated updates to Python dependencies.
+          
+          ## Changes
+          - Updated Python packages to latest compatible versions
+          - All backend tests are passing
+          
+          Please review the changes and merge if everything looks good.
+        branch: automated-python-updates
+        delete-branch: true
