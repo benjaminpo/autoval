@@ -775,11 +775,11 @@ class CarAnalyzer:
                     similarity_score += 15
                 
                 # Fuel type match
-                if car['fuel_type'] == user_car['fuel_type']:
+                if car.get('fuel_type') and user_car.get('fuel_type') and car['fuel_type'] == user_car['fuel_type']:
                     similarity_score += 15
                 
                 # Transmission match
-                if car['transmission'] == user_car['transmission']:
+                if car.get('transmission') and user_car.get('transmission') and car['transmission'] == user_car['transmission']:
                     similarity_score += 10
                 
                 # Price range similarity (new factor)
