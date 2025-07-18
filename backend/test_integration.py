@@ -45,8 +45,8 @@ def test_api_integration(client):
     assert 'priceRating' in data
     assert 'priceDifference' in data
     assert 'percentageDifference' in data
-    assert 'marketTrends' in data
-    assert 'factors' in data
+    assert 'marketComparison' in data
+    assert 'owners' in data
     assert 'recommendations' in data
     
     # Check marketPrice structure
@@ -62,9 +62,15 @@ def test_api_integration(client):
     assert isinstance(data['priceDifference'], (int, float))
     assert isinstance(data['percentageDifference'], (int, float))
     assert isinstance(data['priceRating'], str)
-    assert isinstance(data['marketTrends'], dict)
-    assert isinstance(data['factors'], dict)
+    assert isinstance(data['marketComparison'], dict)
+    assert isinstance(data['owners'], int)
     assert isinstance(data['recommendations'], list)
+    
+    # Check marketComparison structure
+    market_comparison = data['marketComparison']
+    assert 'lowerPriced' in market_comparison
+    assert 'higherPriced' in market_comparison
+    assert 'similarPriced' in market_comparison
 
 
 def test_health_endpoint(client):
@@ -84,7 +90,7 @@ def test_cors_integration(client):
                               'year': 2020,
                               'mileage': 40000,
                               'color': 'white',
-                              'fuel_type': 'petrol',
+                              'fuelType': 'petrol',
                               'transmission': 'automatic',
                               'price': 250000
                           }),

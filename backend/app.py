@@ -739,15 +739,15 @@ class CarAnalyzer:
                 similarity_score += 10
             
             # Fuel type match (medium weight)
-            if car['fuel_type'] == user_car['fuel_type']:
+            if car.get('fuel_type') and user_car.get('fuel_type') and car['fuel_type'] == user_car['fuel_type']:
                 similarity_score += 15
             
             # Transmission match (low weight)
-            if car['transmission'] == user_car['transmission']:
+            if car.get('transmission') and user_car.get('transmission') and car['transmission'] == user_car['transmission']:
                 similarity_score += 10
             
             # Seats match (low weight)
-            if car['seats'] == user_car['seats']:
+            if car.get('seats') and user_car.get('seats') and car['seats'] == user_car['seats']:
                 similarity_score += 5
             
             # If similarity is high enough, include the car
@@ -972,7 +972,7 @@ class CarAnalyzer:
                 'similar_cars_count': len(similar_cars),
                 'scraped_cars_count': scraped_count,
                 'mock_cars_count': mock_count,
-                'owners': user_car['owners'],
+                'owners': user_car.get('owners', 1),
                 'recommendations': recommendations
             }
             
@@ -1085,7 +1085,7 @@ class CarAnalyzer:
                 'similarPriced': similar_priced
             },
             'similar_cars_count': 10,
-            'owners': user_car['owners'],
+            'owners': user_car.get('owners', 1),
             'recommendations': recommendations,
             'fallback_analysis': True
         }
