@@ -41,6 +41,15 @@ coverage/
 .coverage
 .nyc_output
 
+# Python coverage
+htmlcov/
+coverage.xml
+.coverage.*
+cov.xml
+
+# Pytest cache
+.pytest_cache/
+
 # Logs
 *.log
 npm-debug.log*

@@ -6,7 +6,7 @@ import pytest
 import json
 import requests
 from unittest.mock import patch, MagicMock
-from app import app, CarDataScraper, CarAnalyzer
+from app import app, CarDataScraper, CarAnalyzer, get_car_data, analyze_market_trends, predict_price
 
 
 class TestErrorHandling:
@@ -15,8 +15,13 @@ class TestErrorHandling:
     def test_analyze_network_timeout(self):
         """Test network timeout scenarios"""
         with app.test_client() as client:
-            with patch('requests.get') as mock_get:
-                mock_get.side_effect = requests.exceptions.Timeout("Request timeout")
+            # Clear cache to force network call
+            from app import analyzer
+            analyzer.market_data = None
+            analyzer.last_update = None
+            
+            with patch('app.CarDataScraper.search_cars_by_query') as mock_search:
+                mock_search.side_effect = requests.exceptions.Timeout("Request timeout")
                 
                 response = client.post('/api/analyze', 
                     json={
@@ -35,8 +40,13 @@ class TestErrorHandling:
     def test_analyze_connection_error(self):
         """Test connection error scenarios"""
         with app.test_client() as client:
-            with patch('requests.get') as mock_get:
-                mock_get.side_effect = requests.exceptions.ConnectionError("Connection failed")
+            # Clear cache to force network call
+            from app import analyzer
+            analyzer.market_data = None
+            analyzer.last_update = None
+            
+            with patch('app.CarDataScraper.search_cars_by_query') as mock_search:
+                mock_search.side_effect = requests.exceptions.ConnectionError("Connection failed")
                 
                 response = client.post('/api/analyze', 
                     json={
