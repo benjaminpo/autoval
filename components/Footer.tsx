@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
               <h3 className="text-2xl font-bold text-white">AutoVal</h3>
             </div>
             <p className="text-gray-400 leading-relaxed">
-              Hong Kong's leading AI-powered car valuation platform. Get instant, 
+              Hong Kong&apos;s leading AI-powered car valuation platform. Get instant, 
               accurate price analysis based on real market data.
             </p>
             <div className="flex space-x-4">
