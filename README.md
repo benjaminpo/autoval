@@ -174,7 +174,24 @@ Currently, the application uses mock data for testing. To test with real data:
 
 ## Deployment
 
-### Docker Deployment (Recommended)
+### Vercel (Frontend)
+The frontend is configured for automatic deployment to Vercel with GitHub Actions.
+
+**Quick Setup:**
+1. Create a Vercel account and link your GitHub repository
+2. Set up the required GitHub secrets (see [DEPLOYMENT.md](DEPLOYMENT.md))
+3. Push to `main` branch or create a PR for automatic deployment
+
+**Features:**
+- 🚀 Automatic preview deployments for PRs
+- 🏗️ Production deployments on main branch
+- 📊 Lighthouse performance audits
+- ✅ Quality gates (TypeScript, ESLint, tests)
+- 📈 Deployment monitoring and notifications
+
+For detailed setup instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Docker Deployment (Full Stack)
 ```bash
 # Build and run with Docker Compose
 docker-compose up --build
@@ -186,7 +203,7 @@ docker-compose up --build
 3. Configure reverse proxy (nginx)
 4. Set up process manager (PM2, systemd)
 
-## Contributing
+## Development
 
 1. Fork the repository
 2. Create a feature branch
