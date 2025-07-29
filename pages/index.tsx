@@ -498,14 +498,14 @@ const Home: React.FC = () => {
                     </h3>
                 
                 <motion.div 
-                  className={`text-center py-8 px-8 rounded-2xl text-white font-bold text-2xl mb-8 ${getPriceRatingColor(analysis.priceRating)} shadow-2xl relative overflow-hidden`}
+                  className={`text-center py-8 px-8 rounded-2xl text-white font-bold text-2xl mb-8 ${getPriceRatingColor(analysis?.priceRating)} shadow-2xl relative overflow-hidden`}
                   whileHover={{ scale: 1.05, rotate: 1 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <div className="relative flex items-center justify-center">
-                    {getPriceRatingIcon(analysis.priceRating)}
+                    {getPriceRatingIcon(analysis?.priceRating)}
                     <span className="ml-3">
-                      {analysis.priceRating?.charAt(0).toUpperCase() + analysis.priceRating?.slice(1).replace('_', ' ') || 'Unknown'} Price
+                      {analysis?.priceRating?.charAt(0).toUpperCase() + analysis?.priceRating?.slice(1).replace('_', ' ') || 'Unknown'} Price
                     </span>
                   </div>
                 </motion.div>
@@ -513,9 +513,9 @@ const Home: React.FC = () => {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                   {[
                     { value: formatPrice(carData.price), label: 'Your Price', color: 'text-gray-200', bg: 'bg-gray-700 hover:bg-gray-600 border-gray-600' },
-                    { value: formatPrice(analysis.marketPrice.average), label: 'Market Average', color: 'text-blue-400', bg: 'bg-blue-900 hover:bg-blue-800 border-blue-700' },
-                    { value: formatPrice(Math.abs(analysis.priceDifference)), label: 'Difference', color: 'text-purple-400', bg: 'bg-purple-900 hover:bg-purple-800 border-purple-700' },
-                    { value: `${Math.abs(analysis.percentageDifference).toFixed(1)}%`, label: 'Percentage', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' }
+                    { value: formatPrice(analysis?.marketPrice?.average || 0), label: 'Market Average', color: 'text-blue-400', bg: 'bg-blue-900 hover:bg-blue-800 border-blue-700' },
+                    { value: formatPrice(Math.abs(analysis?.priceDifference || 0)), label: 'Difference', color: 'text-purple-400', bg: 'bg-purple-900 hover:bg-purple-800 border-purple-700' },
+                    { value: `${Math.abs(analysis?.percentageDifference || 0).toFixed(1)}%`, label: 'Percentage', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' }
                   ].map((item, index) => (
                     <motion.div
                       key={index}
@@ -548,9 +548,9 @@ const Home: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
-                      { value: analysis.marketComparison.lowerPriced, label: 'Cars Priced Lower', desc: 'Better deal available', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' },
-                      { value: analysis.marketComparison.similarPriced, label: 'Similarly Priced', desc: 'Market average', color: 'text-yellow-400', bg: 'bg-yellow-900 hover:bg-yellow-800 border-yellow-700' },
-                      { value: analysis.marketComparison.higherPriced, label: 'Cars Priced Higher', desc: 'Premium pricing', color: 'text-red-400', bg: 'bg-red-900 hover:bg-red-800 border-red-700' }
+                      { value: analysis?.marketComparison?.lowerPriced || 0, label: 'Cars Priced Lower', desc: 'Better deal available', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' },
+                      { value: analysis?.marketComparison?.similarPriced || 0, label: 'Similarly Priced', desc: 'Market average', color: 'text-yellow-400', bg: 'bg-yellow-900 hover:bg-yellow-800 border-yellow-700' },
+                      { value: analysis?.marketComparison?.higherPriced || 0, label: 'Cars Priced Higher', desc: 'Premium pricing', color: 'text-red-400', bg: 'bg-red-900 hover:bg-red-800 border-red-700' }
                     ].map((item, index) => (
                       <motion.div
                         key={index}
