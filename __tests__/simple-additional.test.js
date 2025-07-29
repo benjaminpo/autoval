@@ -52,7 +52,6 @@ describe('Home Page - Simple Additional Tests', () => {
     it('renders all dropdown options', () => {
       render(<Home />)
       
-      const yearSelect = screen.getByRole('combobox', { name: /year/i })
       const currentYear = new Date().getFullYear()
       
       // Check if the select contains option elements with the current year

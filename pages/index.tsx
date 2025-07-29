@@ -512,13 +512,13 @@ const Home: React.FC = () => {
                 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                   {[
-                    { value: formatPrice(carData.price), label: 'Your Price', color: 'text-gray-200', bg: 'bg-gray-700 hover:bg-gray-600 border-gray-600' },
-                    { value: formatPrice(analysis?.marketPrice?.average || 0), label: 'Market Average', color: 'text-blue-400', bg: 'bg-blue-900 hover:bg-blue-800 border-blue-700' },
-                    { value: formatPrice(Math.abs(analysis?.priceDifference || 0)), label: 'Difference', color: 'text-purple-400', bg: 'bg-purple-900 hover:bg-purple-800 border-purple-700' },
-                    { value: `${Math.abs(analysis?.percentageDifference || 0).toFixed(1)}%`, label: 'Percentage', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' }
+                    { id: 'your-price', value: formatPrice(carData.price), label: 'Your Price', color: 'text-gray-200', bg: 'bg-gray-700 hover:bg-gray-600 border-gray-600' },
+                    { id: 'market-average', value: formatPrice(analysis?.marketPrice?.average || 0), label: 'Market Average', color: 'text-blue-400', bg: 'bg-blue-900 hover:bg-blue-800 border-blue-700' },
+                    { id: 'difference', value: formatPrice(Math.abs(analysis?.priceDifference || 0)), label: 'Difference', color: 'text-purple-400', bg: 'bg-purple-900 hover:bg-purple-800 border-purple-700' },
+                    { id: 'percentage', value: `${Math.abs(analysis?.percentageDifference || 0).toFixed(1)}%`, label: 'Percentage', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' }
                   ].map((item, index) => (
                     <motion.div
-                      key={index}
+                      key={item.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
@@ -548,12 +548,12 @@ const Home: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
-                      { value: analysis?.marketComparison?.lowerPriced || 0, label: 'Cars Priced Lower', desc: 'Better deal available', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' },
-                      { value: analysis?.marketComparison?.similarPriced || 0, label: 'Similarly Priced', desc: 'Market average', color: 'text-yellow-400', bg: 'bg-yellow-900 hover:bg-yellow-800 border-yellow-700' },
-                      { value: analysis?.marketComparison?.higherPriced || 0, label: 'Cars Priced Higher', desc: 'Premium pricing', color: 'text-red-400', bg: 'bg-red-900 hover:bg-red-800 border-red-700' }
+                      { id: 'lower-priced', value: analysis?.marketComparison?.lowerPriced || 0, label: 'Cars Priced Lower', desc: 'Better deal available', color: 'text-green-400', bg: 'bg-green-900 hover:bg-green-800 border-green-700' },
+                      { id: 'similar-priced', value: analysis?.marketComparison?.similarPriced || 0, label: 'Similarly Priced', desc: 'Market average', color: 'text-yellow-400', bg: 'bg-yellow-900 hover:bg-yellow-800 border-yellow-700' },
+                      { id: 'higher-priced', value: analysis?.marketComparison?.higherPriced || 0, label: 'Cars Priced Higher', desc: 'Premium pricing', color: 'text-red-400', bg: 'bg-red-900 hover:bg-red-800 border-red-700' }
                     ].map((item, index) => (
                       <motion.div
-                        key={index}
+                        key={item.id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
@@ -586,7 +586,7 @@ const Home: React.FC = () => {
                     <div className="space-y-4">
                       {analysis.recommendations.map((recommendation, index) => (
                         <motion.div
-                          key={index}
+                          key={`recommendation-${index}-${recommendation.slice(0, 20)}`}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
