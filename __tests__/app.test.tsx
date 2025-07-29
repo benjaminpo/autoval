@@ -4,13 +4,14 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import App from '../pages/_app'
 
 // Simple test component
 const MockComponent = () => <div data-testid="mock-component">Test Component</div>
 
-// Mock Next.js router
-const mockRouter = {
+// Mock Next.js router with minimal required properties
+const mockRouter: any = {
   route: '/',
   pathname: '/',
   query: {},
@@ -26,6 +27,24 @@ const mockRouter = {
     off: jest.fn(),
     emit: jest.fn(),
   },
+  // Add missing properties with mock values
+  components: {},
+  sdc: {},
+  sbc: {},
+  sub: jest.fn(),
+  clc: jest.fn(),
+  pageLoader: {},
+  _bps: jest.fn(),
+  onPopState: jest.fn(),
+  isFallback: false,
+  isReady: true,
+  isLocaleDomain: false,
+  basePath: '',
+  domainLocales: [],
+  locales: [],
+  defaultLocale: 'en',
+  locale: 'en',
+  isPreview: false,
 }
 
 describe('_app.tsx', () => {
